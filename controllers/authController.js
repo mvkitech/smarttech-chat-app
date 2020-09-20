@@ -121,7 +121,6 @@ exports.getSignup = (req, res, next) => {
  * Invoked to post new user signup events.
  */
 exports.postSignup = (req, res, next) => {
-  console.log(req.body);
   const username = req.body.username;
   const email = req.body.email;
   const password = req.body.password;
