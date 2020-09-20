@@ -1,0 +1,41 @@
+<%- include('../includes/head.ejs') %>
+    <link rel="stylesheet" href="/css/forms.css">
+    <link rel="stylesheet" href="/css/chatroom.css">
+    <link rel="stylesheet" href="/css/styles.css">
+  </head>
+
+<body>
+  <%- include('../includes/navigation.ejs') %>
+  <main>
+    <div class="chat">
+      <div id="sidebar" class="chat__sidebar">
+        <h2 class="room-title"><%= room.name %></h2>
+        <ul class="users">
+          <% for (let user of users) { %>
+            <li><%= user.username %></li>
+          <% } %>
+        </ul>
+      </div>
+      <div class="chat__main">
+        <div id="messages" class="chat__messages">
+          <% for (let message of messages) { %>
+            <div class="message">
+              <p>
+                <span class="message__name"><%= message.username %></span>
+                <span class="message__meta"><%= message.sentOn %></span>
+            </p>
+            <p><%= message.content %></p>
+        </div>
+          <% } %>
+          </div>
+        <div class="compose">
+          <form id="message-form" action="/room/<%= room._id %>/messages" method="POST">
+            <input name="content" placeholder="Message" required autocomplete="off">
+            <button type="submit">Send</button>
+          </form>
+          <a href="/room/<%= room._id %>/exit" class="exitButton">Exit</a>
+        </div>
+      </div>
+    </div>  
+  </main>
+  <%- include('../includes/end.ejs') %>

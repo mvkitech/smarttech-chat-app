@@ -1,0 +1,34 @@
+<%- include('../includes/head.ejs') %>
+    <link rel="stylesheet" href="/css/forms.css">
+    <link rel="stylesheet" href="/css/chatroom.css">
+</head>
+
+<body>
+   <%- include('../includes/navigation.ejs') %>
+    <main>
+        <% if (errorMessage) { %>
+            <div class="user-message user-message--error"><%= errorMessage %></div>
+        <% } %>
+        <form class="chatroom-form" action="/rooms" method="POST">
+            <div class="form-control">
+                <label for="title">Name</label>
+                <input 
+                    class="<%= validationErrors.find(e => e.param === 'name') ? 'invalid' : '' %>"
+                    type="text" 
+                    name="name" 
+                    id="name"
+                    value="<% if (editing || hasError) { %><%= chatroom.name %><% } %>">
+            </div>
+            <div class="form-control">
+                <label for="description">Topic</label>
+                <input 
+                    class="<%= validationErrors.find(e => e.param === 'topic') ? 'invalid' : '' %>"
+                    type="text" 
+                    name="topic" 
+                    id="topic"
+                    value="<% if (editing || hasError) { %><%= chatroom.topic %><% } %>">
+            </div>
+            <button class="btn" type="submit">Create</button>
+        </form>
+    </main>
+<%- include('../includes/end.ejs') %>

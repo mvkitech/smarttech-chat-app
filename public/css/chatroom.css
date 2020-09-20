@@ -1,0 +1,21 @@
+.chatroom-form {
+  width: 20rem;
+  max-width: 90%;
+  margin: auto;
+  display: block;
+}
+
+.chatroom-item {
+  width: 20rem;
+  max-width: 95%;
+  margin: 1rem;
+}
+
+.chatroom__name {
+  font-size: 1.2rem;
+  text-align: center;
+}
+
+.chatroom__topic {
+  text-align: center;
+}
