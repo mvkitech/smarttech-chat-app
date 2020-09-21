@@ -8,6 +8,7 @@
   <%- include('../includes/navigation.ejs') %>
   <main>
     <div class="chat">
+      
       <div id="sidebar" class="chat__sidebar">
         <h2 class="room-title"><%= room.name %></h2>
         <ul class="users">
@@ -16,6 +17,7 @@
           <% } %>
         </ul>
       </div>
+
       <div class="chat__main">
         <div id="messages" class="chat__messages">
           <% for (let message of messages) { %>
@@ -23,11 +25,12 @@
               <p>
                 <span class="message__name"><%= message.username %></span>
                 <span class="message__meta"><%= message.sentOn %></span>
-            </p>
-            <p><%= message.content %></p>
-        </div>
+              </p>
+              <p><%= message.content %></p>
+            </div>
           <% } %>
-          </div>
+        </div>
+
         <div class="compose">
           <form id="message-form" action="/room/<%= room._id %>/messages" method="POST">
             <input name="content" placeholder="Message" required autocomplete="off">
@@ -35,7 +38,8 @@
           </form>
           <a href="/room/<%= room._id %>/exit" class="exitButton">Exit</a>
         </div>
+
       </div>
     </div>  
   </main>
-  <%- include('../includes/end.ejs') %>
+  <%- include('../includes/tail.ejs') %>

@@ -41,7 +41,7 @@ router.post('/room/:roomId/subscribe', chatroomController.subscribeUser);
 router.post('/room/:roomId/unsubscribe', chatroomController.unsubscribeUser);
 
 // Create the enter/exit chatroom routes
-router.get('/room/:roomId/messages', chatroomController.enterChatroom);
-router.get('/room/:roomId/exit', chatroomController.exitChatroom);
+router.get('/room/:roomId/messages', isAuth, chatroomController.enterChatroom);
+router.get('/room/:roomId/exit', isAuth, chatroomController.exitChatroom);
 
 module.exports = router;
