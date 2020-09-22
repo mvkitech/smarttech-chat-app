@@ -147,10 +147,14 @@ exports.postSignup = (req, res, next) => {
         email,
         password: hashedPassword,
       });
+      req.session.isLoggedIn = true;
+      req.session.user = user;
       return user.save();
     })
     .then((result) => {
-      res.redirect('/login');
+      return req.session.save((err) => {
+        res.redirect('/');
+      });
     })
     .catch((err) => {
       const error = new Error(err);
