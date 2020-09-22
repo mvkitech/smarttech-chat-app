@@ -8,23 +8,25 @@ const mongoose = require('mongoose');
 const flash = require('connect-flash');
 const http = require('http');
 const socketio = require('socket.io');
-const moment = require('moment');
 
 // Required local packages
 const authRoutes = require('./routes/authRoutes');
 const chatroomRoutes = require('./routes/chatroomRoutes');
-const messageRoutes = require('./routes/messageRoutes');
 const errorController = require('./controllers/errorController');
 const User = require('./models/user');
 const Room = require('./models/chatroom.js');
 const Message = require('./models/message');
-const generateChatMessage = require('./utils/messageUtil');
+const {
+  generateChatMessage,
+  generateNewChatMessage,
+} = require('./utils/messageUtil');
 const {
   addUser,
   removeUser,
   getUser,
   getUsersInRoom,
 } = require('./utils/userUtils');
+const { Logger } = require('mongodb');
 
 // Create express server chat application
 const app = express();
@@ -84,7 +86,6 @@ app.use((req, res, next) => {
 // Register various route handlers
 app.use(authRoutes);
 app.use(chatroomRoutes);
-app.use(messageRoutes);
 
 // Setup application error handlers
 app.use(errorController.get404);
@@ -136,14 +137,15 @@ io.on('connection', (socket) => {
     Room.findById(roomId).then((room) => {
       room.messages.forEach((message) => {
         Message.findById(message.messageId)
-          .sort({ sentOn: 1 })
+          // .sort({ sentOn: 1 })
           .then((roomMessage) => {
+            const sentOn = new Date(roomMessage.sentOn).toISOString();
             socket.emit(
               'message',
               generateChatMessage(
                 `${roomMessage.username}`,
                 `${roomMessage.content}`,
-                `${roomMessage.sentOn}`
+                `${sentOn}`
               )
             );
           });
@@ -151,18 +153,14 @@ io.on('connection', (socket) => {
     });
 
     // Send welcome message to only the new user
-    const sentOn = formatTimestamp(new Date().getTime());
-    // socket.emit(
-    //   'message',
-    //   generateChatMessage('Admin', `Welcome ${username}`, sentOn)
-    // );
+    // socket.emit('message', generateChatMessage('Admin', `Welcome ${username}`));
 
     // Send message to everyone else, excluding new user
     socket.broadcast
       .to(user.room)
       .emit(
         'message',
-        generateChatMessage('Admin', `${username} has joined`, sentOn)
+        generateNewChatMessage('Admin', `${username} has joined`)
       );
 
     // Refresh chatRoom's connected users
@@ -176,27 +174,36 @@ io.on('connection', (socket) => {
 
   // Event listener waiting for messages from the clients
   socket.on('sendMessage', (roomId, userId, content, callback) => {
-    User.findById(userId)
-      .then((user) => {
-        const username = user.username;
-        const sentOn = formatTimestamp(new Date().getTime());
-        const message = new Message({
-          roomId: roomId,
-          userId: userId,
-          username: username,
-          content: content,
-          sentOn: sentOn,
+    //
+    // First find chat room and user message will be associated to
+    Room.findById(roomId)
+      .then((room) => {
+        User.findById(userId).then((user) => {
+          //
+          // Create new message instance
+          const username = user.username;
+          const message = new Message({
+            roomId: roomId,
+            userId: userId,
+            username: username,
+            content: content,
+            sentOn: new Date().getTime(),
+          });
+
+          // Save message and add it to the chat room
+          message.save().then((result) => {
+            room.addMessage(message);
+
+            // Send message to everyone in the chat room
+            const sender = getUser(socket.id);
+            io.to(sender.room).emit(
+              'message',
+              generateNewChatMessage(username, content)
+            );
+
+            callback(roomId);
+          });
         });
-        console.log(message); //FUBAR persist message here?
-
-        // Send message to everyone in the chat room
-        const sender = getUser(socket.id);
-        io.to(sender.room).emit(
-          'message',
-          generateChatMessage(username, content, sentOn)
-        );
-
-        callback(roomId);
       })
       .catch((err) => {
         console.log(err);
@@ -211,13 +218,12 @@ io.on('connection', (socket) => {
     if (user) {
       //
       // Remove user from chatRoom
-      const sentOn = formatTimestamp(new Date().getTime());
       removeUser(socket.id);
 
       // Send message to everyone in chat room that user has left room
       io.to(user.room).emit(
         'message',
-        generateChatMessage('Admin', `${user.username} has left`, sentOn)
+        generateChatMessage('Admin', `${user.username} has left`)
       );
 
       // Refresh chatRoom's connected users
@@ -228,11 +234,6 @@ io.on('connection', (socket) => {
     }
   });
 });
-
-// Helper function used to format the Date timestamps.
-const formatTimestamp = (timestamp) => {
-  return `${moment(timestamp).format('YYYY-MM-DD h:mm a')}`;
-};
 
 // Listen for events on the server
 const port = process.env.PORT;

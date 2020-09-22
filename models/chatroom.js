@@ -66,7 +66,6 @@ chatroomSchema.methods.removeSubscription = async function (user) {
 /**
  * Used to add a new message to this chatroom.
  */
-//FUBAR needs to be refactored somewhere else
 chatroomSchema.methods.addMessage = async function (message) {
   this.messages = [...this.messages, { messageId: message }];
   return await this.save();

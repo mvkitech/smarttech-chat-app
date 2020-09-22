@@ -14,7 +14,7 @@ router.get('/rooms', isAuth, chatroomController.getChatroom);
 router.post(
   '/rooms',
   [
-    body('name', 'Name must be at least 2 characters')
+    body('name', 'Name must be at least 2 characters and no more than 20.')
       .isString()
       .isLength({ min: 2, max: 20 })
       .trim()
@@ -27,9 +27,9 @@ router.post(
           }
         });
       }),
-    body('topic', 'Topic must be at least 3 characters')
+    body('topic', 'Topic must be at least 3 characters and no more that 30.')
       .isString()
-      .isLength({ min: 3, max: 20 })
+      .isLength({ min: 3, max: 30 })
       .trim(),
   ],
   isAuth,

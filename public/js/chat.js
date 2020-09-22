@@ -61,9 +61,9 @@ socket.on('message', (message) => {
   const html = Mustache.render(messageTemplate, {
     username: message.username,
     content: message.content,
-    sentOn: message.sentOn,
+    sentOn: formatTimestamp(message.sentOn),
   });
-  $messages.insertAdjacentHTML('afterbegin', html);
+  $messages.insertAdjacentHTML('beforeend', html);
   autoscroll();
 });
 
@@ -78,6 +78,13 @@ socket.on('chatRoom', ({ room, users }) => {
   });
   document.querySelector('#sidebar').innerHTML = html;
 });
+
+/**
+ * Helper function used to format the Date timestamps.
+ */
+const formatTimestamp = (timestamp) => {
+  return `${moment(timestamp).format('YYYY-MM-DD h:mm a')}`;
+};
 
 /**
  * Helper function used to manage the chat message scroll bar.

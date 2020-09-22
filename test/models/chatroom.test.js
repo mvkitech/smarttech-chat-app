@@ -80,7 +80,7 @@ test('addMessage_whenMessageIsAdded_returnsOneItemInArray', () => {
     userId: defaultUser,
     username: defaultUser.username,
     content: 'Unit Test Message',
-    sentOn: '2020-09-20 12:00 am',
+    sentOn: new Date().getTime(),
   });
   defaultChatroom.addMessage(message);
   result = defaultChatroom.messages;

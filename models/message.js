@@ -21,7 +21,7 @@ const messageSchema = new Schema({
     required: true,
   },
   sentOn: {
-    type: String,
+    type: Date,
     required: true,
   },
 });
