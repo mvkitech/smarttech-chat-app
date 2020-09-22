@@ -4,21 +4,6 @@ The server component is Node.JS and one of the reasons why Node.JS was selected
 was because node is a fairly light weight and easily scalable server platform. 
 The user interface uses "EJS - Embedded JavaScript" templates. 
 
-Presently all Chat traffic is persisted to a MongoDB instance running on the cloud. 
-But at this time the WebSocket capabilities have NOT been setup and the only way to 
-see the chat traffic between users is to continually enter and exit the chatrooms. 
-Obviously this is not desirable and needs to be addressed ASAP. Basically what happened 
-was that I created the persistence capabilities first before trying to hook up the
-WebSockets. But when the WebSocket code was beginning to be addeded, the Express
-routers stopped being called on any new chat message form submit events which of 
-course also meant that the chat messages were no longer being persisted. It is
-believed that to fix this issue, I need to build the WebSocket layers first and 
-then inside of the server code, alter how and when the chat messages get saved.
-Unfortunately I feel that I have run out of time to do this and would rather 
-show the chat messages persisting as they are now, with the annoyance of having
-to constantly enter/exit each chat room versus try to hack together the solution
-and run the risk that both the WebSocket as well as the message persistence failed.
-
 To run this code, one must first have node.js installed on their system. I built 
 this project using node "v12.18.2", and then all one needs to do after downloading
 and unzipping the code from GitHub is to navigate to the folder the code was
