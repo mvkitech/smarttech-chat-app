@@ -37,7 +37,6 @@ test('isUserSubscribed_whenDifferentSubscriptionExist_returnsUndefined', () => {
   let result = defaultChatroom.subscribers;
   expect(result.length).toEqual(0);
   const otherUser = new User({
-    _id: 2,
     username: 'otherUser',
     email: 'otherUser@mvkitech.com',
     password: 'otherTest',

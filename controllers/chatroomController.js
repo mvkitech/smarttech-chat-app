@@ -126,7 +126,7 @@ exports.enterChatroom = (req, res, next) => {
   const roomId = req.params.roomId;
   Room.findById(roomId)
     .then((room) => {
-      Message.find({ roomId: roomId }).then((roomMessages) => {
+      Message.find({ roomId }).then((roomMessages) => {
         res.render('room/chatroom', {
           path: '/room',
           pageTitle: 'Chat Room',
