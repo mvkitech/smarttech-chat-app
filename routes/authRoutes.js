@@ -4,7 +4,6 @@ const { check, body } = require('express-validator');
 
 // Required local packages
 const authController = require('../controllers/authController');
-const isAuth = require('../middleware/is-auth');
 const User = require('../models/user');
 
 // Create the Express router
@@ -52,6 +51,6 @@ router.post(
 );
 
 // Setup 'Logout' route
-router.post('/logout', isAuth, authController.postLogout);
+router.post('/logout', authController.postLogout);
 
 module.exports = router;
