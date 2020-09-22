@@ -72,20 +72,6 @@ test('isUserSubscribed_whenSubscriptionAddedAndRemoved_returnsUndefined', () => 
   expect(result).toBe(undefined);
 });
 
-test('getUsersInRoom_whenNoUsersAreInRoom_returnsEmptyArray', () => {
-  const result = defaultChatroom.getUsersInRoom();
-  expect(result.length).toEqual(0);
-});
-
-test('getUsersInRoom_whenUserIsInRoom_returnsOneItemInArray', () => {
-  defaultChatroom.addUserToRoom(defaultUser);
-  let result = defaultChatroom.getUsersInRoom();
-  expect(result.length).toEqual(1);
-  defaultChatroom.removeUserFromRoom(defaultUser);
-  result = defaultChatroom.getUsersInRoom();
-  expect(result.length).toEqual(0);
-});
-
 test('addMessage_whenMessageIsAdded_returnsOneItemInArray', () => {
   let result = defaultChatroom.messages;
   expect(result.length).toEqual(0);

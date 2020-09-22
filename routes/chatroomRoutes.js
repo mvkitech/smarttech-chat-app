@@ -10,7 +10,7 @@ const Room = require('../models/chatroom');
 // Create the various chat room routes
 const router = express.Router();
 router.get('/', chatroomController.getChatrooms);
-router.get('/rooms', chatroomController.getChatroom);
+router.get('/rooms', isAuth, chatroomController.getChatroom);
 router.post(
   '/rooms',
   [
@@ -37,11 +37,18 @@ router.post(
 );
 
 // Create the chatroom subscribe/unsubscribe routes
-router.post('/room/:roomId/subscribe', chatroomController.subscribeUser);
-router.post('/room/:roomId/unsubscribe', chatroomController.unsubscribeUser);
+router.post(
+  '/room/:roomId/subscribe',
+  isAuth,
+  chatroomController.subscribeUser
+);
+router.post(
+  '/room/:roomId/unsubscribe',
+  isAuth,
+  chatroomController.unsubscribeUser
+);
 
-// Create the enter/exit chatroom routes
+// Create the enter chatroom route
 router.get('/room/:roomId/messages', isAuth, chatroomController.enterChatroom);
-router.get('/room/:roomId/exit', isAuth, chatroomController.exitChatroom);
 
 module.exports = router;

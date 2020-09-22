@@ -1,9 +1,5 @@
 const mongoose = require('mongoose');
 
-// Used only by the UI to control who is
-// actively in a chat room at any moment.
-const usersInRoom = [];
-
 const Schema = mongoose.Schema;
 const chatroomSchema = new Schema({
   name: {
@@ -68,36 +64,9 @@ chatroomSchema.methods.removeSubscription = async function (user) {
 };
 
 /**
- * Used to return collection of users who are actively in room.
- */
-chatroomSchema.methods.getUsersInRoom = function () {
-  return usersInRoom;
-};
-
-/**
- * Used add the specified user to the collection of users who may
- * be actively inside the chatroom at this time.
- */
-chatroomSchema.methods.addUserToRoom = function (user) {
-  usersInRoom.push(user);
-};
-
-/**
- * Used add the specified user to the collection of users who may
- * be actively inside the chatroom at this time.
- */
-chatroomSchema.methods.removeUserFromRoom = function (user) {
-  const index = usersInRoom.findIndex((target) => {
-    return target._id.toString() === user._id.toString();
-  });
-  if (index > -1) {
-    usersInRoom.splice(index, 1);
-  }
-};
-
-/**
  * Used to add a new message to this chatroom.
  */
+//FUBAR needs to be refactored somewhere else
 chatroomSchema.methods.addMessage = async function (message) {
   this.messages = [...this.messages, { messageId: message }];
   return await this.save();

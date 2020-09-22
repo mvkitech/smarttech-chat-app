@@ -2,12 +2,12 @@
   "name": "smart-chat",
   "version": "1.0.0",
   "description": "Simple Chat App for Smart Tech",
-  "main": "index.js",
+  "main": "app.js",
   "author": "mvkitech.com",
   "license": "ISC",
   "scripts": {
-    "start": "node index.js",
-    "dev": "env-cmd ./config/dev.env nodemon index.js",
+    "start": "node app.js",
+    "dev": "env-cmd ./config/dev.env nodemon app.js",
     "test": "env-cmd ./config/test.env jest --watchAll --runInBand",
     "test-mocha": "mocha"
   },

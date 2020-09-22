@@ -126,33 +126,14 @@ exports.enterChatroom = (req, res, next) => {
   const roomId = req.params.roomId;
   Room.findById(roomId)
     .then((room) => {
-      room.addUserToRoom(req.user);
       Message.find({ roomId: roomId }).then((roomMessages) => {
         res.render('room/chatroom', {
           path: '/room',
           pageTitle: 'Chat Room',
           room: room,
-          users: room.getUsersInRoom(),
-          messages: roomMessages,
+          user: req.user,
         });
       });
-    })
-    .catch((err) => {
-      const error = new Error(err);
-      error.httpStatusCode = 500;
-      return next(error);
-    });
-};
-
-/**
- * Invoked when the user exits a chatroom
- */
-exports.exitChatroom = (req, res, next) => {
-  const roomId = req.params.roomId;
-  Room.findById(roomId)
-    .then((room) => {
-      room.removeUserFromRoom(req.user);
-      res.redirect('/');
     })
     .catch((err) => {
       const error = new Error(err);
