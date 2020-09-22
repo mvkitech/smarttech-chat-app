@@ -26,7 +26,6 @@ const {
   getUser,
   getUsersInRoom,
 } = require('./utils/userUtils');
-const { Logger } = require('mongodb');
 
 // Create express server chat application
 const app = express();
