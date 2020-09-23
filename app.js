@@ -133,21 +133,17 @@ io.on('connection', (socket) => {
     socket.join(user.room);
 
     // Render existing messages before sending welcome message
-    Room.findById(roomId).then((room) => {
-      room.messages.forEach((message) => {
-        Message.findById(message.messageId)
-          // .sort({ sentOn: 1 })
-          .then((roomMessage) => {
-            const sentOn = new Date(roomMessage.sentOn).toISOString();
-            socket.emit(
-              'message',
-              generateChatMessage(
-                `${roomMessage.username}`,
-                `${roomMessage.content}`,
-                `${sentOn}`
-              )
-            );
-          });
+    Message.find({ roomId }).then((roomMessages) => {
+      roomMessages.forEach((roomMessage) => {
+        const sentOn = new Date(roomMessage.sentOn).toISOString();
+        socket.emit(
+          'message',
+          generateChatMessage(
+            `${roomMessage.username}`,
+            `${roomMessage.content}`,
+            `${sentOn}`
+          )
+        );
       });
     });
 
